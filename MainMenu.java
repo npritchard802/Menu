@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.io.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,13 +21,13 @@ public class MainMenu extends JFrame
 	
 	// Load and Start panel
 	private JPanel gamePanel;
-	private static JList loadGameList;
-	private static String [] gameNames = {"Checkers", "Chess", "Battleship"};
-	private static String [] loadGameNames = {"Game1", "Game2", "Game23"};
+	private static JList<?> gameList;
+	private static JLabel titleOfPanel;
+	private static String [] startGame = {"Checkers", "Chess", "Battleship"};
+	private static String [] loadGame = {"Game1", "Game2", "Game23"};
 	
 	private JButton playButton;
 	private JButton backButton;
-	
 	
 	
 	public static void main(String[] args)
@@ -45,11 +47,13 @@ public class MainMenu extends JFrame
 		cardPanel.add(mainPanel);
 		cardPanel.add(gamePanel);
 		add(cardPanel);
+		
 		StartOrLoadClick listener = new StartOrLoadClick();
 		startButton.addActionListener(listener);
 		loadButton.addActionListener(listener);
 		backButton.addActionListener(listener);
 		playButton.addActionListener(listener);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
@@ -91,69 +95,85 @@ public class MainMenu extends JFrame
 	}
 	
 	private void constructGamePanel() {
-		//Will this all eventually be in the StartorLoad action?
 		
-		loadGameList = new JList(loadGameNames);
-		loadGameList.setVisibleRowCount(3);
-		loadGameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		add(new JScrollPane(loadGameList));
+		JLabel titleOfPanel = new JLabel("empty");
+		gameList = new JList<Object>();
+		gameList.setVisibleRowCount(3);
+		gameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		add(new JScrollPane(gameList));
 		
+		//In both load and start
 		playButton = new JButton("Play");
 		playButton.setPreferredSize(new Dimension (350,50));
 		backButton = new JButton("Back");
 		backButton.setPreferredSize(new Dimension (350,50));
-				
 		gamePanel = new JPanel();
 		
 		GridBagConstraints b = new GridBagConstraints();
 		gamePanel.setLayout(new GridBagLayout());
-		
 		b.insets= new Insets(0,0,0,0);
 		b.fill = GridBagConstraints.HORIZONTAL;
-		b.gridx = 0;
+		b.gridx = 1;
 		b.gridy = 0;
-		gamePanel.add(loadGameList,b);
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets (0,0,0,0);
-		c.fill = GridBagConstraints.HORIZONTAL;
-	    c.gridx = 0;
-		c.gridy = 1;
-		gamePanel.add(playButton,c);
+		gamePanel.add(titleOfPanel,b);
+		
 		
 		b.fill = GridBagConstraints.HORIZONTAL;
-		b.gridx = 1;
-		b.gridy = 1;
-		gamePanel.add(backButton,b);
+		b.gridx = 0;
+		b.gridy = 2;
+		gamePanel.add(gameList,b);
+				
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets (100,0,0,0);
+		c.fill = GridBagConstraints.HORIZONTAL;
+	    c.gridx = 1;
+		c.gridy = 3;
+		gamePanel.add(playButton,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 3;
+		gamePanel.add(backButton,c);
+		//In both load and start
 		
 	}
 	
 	class StartOrLoadClick implements ActionListener {
 
+		
 		@Override
 		public void actionPerformed(ActionEvent arg0) 
 		{
 			Object source = arg0.getSource();
-			JLabel title = new JLabel();
+			
 			
 			if (source == startButton)
 			{
-				gamePanel.remove(title);
+				gamePanel.remove(gameList);
+				//gamePanel.remove(titleOfPanel);
 				gamePanel.updateUI();
-				title = new JLabel ("Start Game");
-				gamePanel.add(title);
+				//titleOfPanel = new JLabel ("Start Game");
+				gameList = new JList<Object> (startGame);
+				gameList.setPreferredSize(new Dimension(300,300));
+				gamePanel.add(gameList);
+				//gamePanel.add(titleOfPanel);
 				CardLayout cl = (CardLayout) cardPanel.getLayout();
-				cl.last(cardPanel);
+				cl.last(cardPanel);				
 			} 
 			else if (source == loadButton) 
 			{
-				gamePanel.remove(title);
-				gamePanel.updateUI();											
-				title = new JLabel ("Load Game");
-				gamePanel.add(title);
+				gamePanel.remove(gameList);
+				//gamePanel.remove(titleOfPanel);
+				titleOfPanel = new JLabel ("Load Game");
+				gamePanel.updateUI();
+				//gamePanel.add(titleOfPanel);
+				//gameList = new JList<Object> (loadGame);
+				gameList.setPreferredSize(new Dimension(300,300));
+				gamePanel.add(gameList);
 				
 				CardLayout cl = (CardLayout) cardPanel.getLayout();
 				cl.last(cardPanel);
-							
+				
 			} 
 			else if (source == backButton) 
 			{
@@ -183,15 +203,10 @@ public class MainMenu extends JFrame
 		
 		public static Object selectedGame()
 		{ 
-			Object selected = loadGameList.getSelectedValue();
+			Object selected = gameList.getSelectedValue();
 			Object selectedGame = selected;
 			System.out.println(selectedGame);
 			return selectedGame;
 		}
 		
-		
 	}
-
-			
-
-
