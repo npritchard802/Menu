@@ -10,21 +10,25 @@ public class MainMenu extends JFrame
 {
 	
 	private JPanel cardPanel;
-	
+	private JPanel cardPanel2;
+	private JLabel loadLabel;
+	private JLabel startLabel;
 	//Main Menu Panel
 	private JPanel mainPanel;
 	private JLabel kptLabel;
 	private JButton startButton;
 	private JButton loadButton;
-	private JLabel backGround;
-	private Image img;
-	
+		
 	// Load and Start panel
 	private JPanel gamePanel;
-	private static JList<?> gameList;
-	private static JLabel titleOfPanel;
-	private static String [] startGame = {"Checkers", "Chess", "Battleship"};
-	private static String [] loadGame = {"Game1", "Game2", "Game23"};
+	private JList<?> gameList;
+	private JLabel titleOfPanel;
+	
+	//********************************************************************
+	//Will be replaced with code that receives game file names
+	private String [] startGame = {"Checkers", "Chess", "Battleship"};
+	private String [] loadGame = {"Game1", "Game2", "Game23"};
+	//********************************************************************
 	
 	private JButton playButton;
 	private JButton backButton;
@@ -38,7 +42,6 @@ public class MainMenu extends JFrame
 	public MainMenu()
 	{
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		
 		
 		constructMainPanel();
 		constructGamePanel();
@@ -96,7 +99,8 @@ public class MainMenu extends JFrame
 	
 	private void constructGamePanel() {
 		
-		JLabel titleOfPanel = new JLabel("empty");
+		titleOfPanel = new JLabel ();
+		titleOfPanel.setFont(new Font("Serif",Font.PLAIN,42));
 		gameList = new JList<Object>();
 		gameList.setVisibleRowCount(3);
 		gameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -111,17 +115,18 @@ public class MainMenu extends JFrame
 		
 		GridBagConstraints b = new GridBagConstraints();
 		gamePanel.setLayout(new GridBagLayout());
-		b.insets= new Insets(0,0,0,0);
+		b.insets= new Insets(-400,400,200,0);
 		b.fill = GridBagConstraints.HORIZONTAL;
 		b.gridx = 1;
 		b.gridy = 0;
 		gamePanel.add(titleOfPanel,b);
 		
-		
-		b.fill = GridBagConstraints.HORIZONTAL;
-		b.gridx = 0;
-		b.gridy = 2;
-		gamePanel.add(gameList,b);
+		GridBagConstraints d = new GridBagConstraints();
+		d.insets = new Insets(0,0,0,0);
+		d.fill = GridBagConstraints.VERTICAL;
+		d.gridx = 0;
+		d.gridy = 1;
+		gamePanel.add(gameList,d);
 				
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets (100,0,0,0);
@@ -148,28 +153,21 @@ public class MainMenu extends JFrame
 			
 			
 			if (source == startButton)
-			{
+			{				
+				titleOfPanel.setText("Start Game");
 				gamePanel.remove(gameList);
-				//gamePanel.remove(titleOfPanel);
-				gamePanel.updateUI();
-				//titleOfPanel = new JLabel ("Start Game");
 				gameList = new JList<Object> (startGame);
 				gameList.setPreferredSize(new Dimension(300,300));
-				gamePanel.add(gameList);
-				//gamePanel.add(titleOfPanel);
+				;
 				CardLayout cl = (CardLayout) cardPanel.getLayout();
 				cl.last(cardPanel);				
 			} 
 			else if (source == loadButton) 
 			{
+				titleOfPanel.setText("Load Game");
 				gamePanel.remove(gameList);
-				//gamePanel.remove(titleOfPanel);
-				titleOfPanel = new JLabel ("Load Game");
-				gamePanel.updateUI();
-				//gamePanel.add(titleOfPanel);
-				//gameList = new JList<Object> (loadGame);
+				gameList = new JList<Object> (loadGame);
 				gameList.setPreferredSize(new Dimension(300,300));
-				gamePanel.add(gameList);
 				
 				CardLayout cl = (CardLayout) cardPanel.getLayout();
 				cl.last(cardPanel);
@@ -196,12 +194,14 @@ public class MainMenu extends JFrame
 			else {
 			System.out.println("You done messed up");
 			}
-			
-		}
-		}
-	
+			gamePanel.updateUI();
+			gamePanel.add(gameList);
 		
-		public static Object selectedGame()
+		
+		}
+	}
+		
+		public Object selectedGame()
 		{ 
 			Object selected = gameList.getSelectedValue();
 			Object selectedGame = selected;
