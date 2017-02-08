@@ -131,7 +131,7 @@ public class MainMenu extends JFrame
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets (100,0,0,0);
 		c.fill = GridBagConstraints.HORIZONTAL;
-	    c.gridx = 1;
+	    	c.gridx = 1;
 		c.gridy = 3;
 		gamePanel.add(playButton,c);
 		
@@ -158,7 +158,6 @@ public class MainMenu extends JFrame
 				gamePanel.remove(gameList);
 				gameList = new JList<Object> (startGame);
 				gameList.setPreferredSize(new Dimension(300,300));
-				;
 				CardLayout cl = (CardLayout) cardPanel.getLayout();
 				cl.last(cardPanel);				
 			} 
@@ -196,8 +195,6 @@ public class MainMenu extends JFrame
 			}
 			gamePanel.updateUI();
 			gamePanel.add(gameList);
-		
-		
 		}
 	}
 		
